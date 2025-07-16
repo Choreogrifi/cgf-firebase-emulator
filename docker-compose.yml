@@ -1,0 +1,39 @@
+services:
+  firebase-emulator:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: firebase-emulator
+    ports:
+      - "8080:8080"
+      - "4000:4000"
+      - "9099:9099"
+      - "5050:5050"
+      - "8085:8085"
+      - "9199:9199"
+      - "9000:9000"
+    volumes:
+      - firebase_emulator_data:/firebase/data/export
+      - ./firebase.json:/app/firebase.json
+      - ./.firebaserc:/app/.firebaserc
+      - ./firestore.rules:/app/firestore.rules
+      - ./firestore.indexes.json:/app/firestore.indexes.json
+      - ./storage.rules:/app/storage.rules
+      - ./database.rules.json:/app/database.rules.json
+    environment:
+      - FIREBASE_PROJECT_ID=local-firebase-emulator
+      - FIRESTORE_EMULATOR_HOST=0.0.0.0:8080
+      - FIREBASE_AUTH_EMULATOR_HOST=0.0.0.0:9099
+      - FUNCTIONS_EMULATOR_HOST=0.0.0.0:5001
+      - PUBSUB_EMULATOR_HOST=0.0.0.0:8085
+      - FIREBASE_STORAGE_EMULATOR_HOST=0.0.0.0:9199
+      - DATABASE_EMULATOR_HOST=0.0.0.0:9000
+    networks:
+      - shared-docker-network
+ 
+volumes:
+  firebase_emulator_data:
+
+networks:
+  shared-docker-network:
+    external: true
